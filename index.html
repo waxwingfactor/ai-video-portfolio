@@ -23,7 +23,7 @@
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body { margin: 0; background: var(--yellow); color: var(--navy); font: 400 15px/1.5 Inter, system-ui, sans-serif; }
-  main { width: min(1160px, 100% - 40px); margin: 0 auto; padding: clamp(36px, 7vh, 72px) 0 40px; }
+  main { width: min(1160px, 100% - 40px); margin: 0 auto; padding: clamp(36px, 7vh, 72px) 0 clamp(48px, 8vh, 80px); }
 
   header { text-align: center; margin-bottom: clamp(28px, 5vh, 48px); }
   h1, h2 { font-family: "Archivo Black", Impact, sans-serif; font-weight: 400; text-transform: uppercase; color: var(--blue); margin: 0; letter-spacing: .01em; }
@@ -76,7 +76,6 @@
   /* three 9:16 */
   section.ttt { --maxw: calc(1.6875 * var(--hmax) + 2 * var(--g)); }
 
-  footer { margin-top: clamp(48px, 8vh, 72px); text-align: center; font-size: 13px; color: var(--navy); opacity: .75; }
 
   @media (max-width: 720px) {
     :root { --hmax: 78svh; }
@@ -196,7 +195,6 @@
     </div>
   </section>
 
-  <footer>Spec work. Every brand shown is fictional or unaffiliated.</footer>
 </main>
 
 <script>
