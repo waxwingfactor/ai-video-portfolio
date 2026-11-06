@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>AI video portfolio</title>
+<meta name="description" content="Fifteen photoreal AI films: brand films, ads, product films, presenters and Shorts.">
+<meta property="og:title" content="AI video portfolio">
+<meta property="og:description" content="Fifteen photoreal AI films: brand films, ads, product films, presenters and Shorts.">
+<meta property="og:image" content="https://waxwingfactor.github.io/every-order-has-a-story/media/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FEF198; --blue: #0048F0; --navy: #0E1E40; --sky: #C0D2F0;
+    --g: 16px;                       /* gap between tiles */
+    --hmax: min(72vh, 640px);        /* tallest a 9:16 frame may get on desktop */
+    --c: 54px;                       /* caption height under each frame */
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--yellow); color: var(--navy); font: 400 15px/1.5 Inter, system-ui, sans-serif; }
+  main { width: min(1160px, 100% - 40px); margin: 0 auto; padding: clamp(36px, 7vh, 72px) 0 40px; }
+
+  header { text-align: center; margin-bottom: clamp(28px, 5vh, 48px); }
+  h1, h2 { font-family: "Archivo Black", Impact, sans-serif; font-weight: 400; text-transform: uppercase; color: var(--blue); margin: 0; letter-spacing: .01em; }
+  h1 { font-size: clamp(40px, 7vw, 76px); line-height: .95; }
+  nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
+  nav a { color: var(--navy); text-decoration: none; font-weight: 600; font-size: 14px; padding: 7px 15px; background: #fff; border: 2px solid var(--blue); border-radius: 999px; transition: background .15s, color .15s; }
+  nav a:hover, nav a:focus-visible { background: var(--blue); color: #fff; }
+
+  section { padding-top: clamp(36px, 6vh, 56px); scroll-margin-top: 8px; }
+  h2 { font-size: clamp(22px, 3vw, 30px); margin-bottom: 18px; text-align: center; }
+
+  /* Every frame has its video's exact aspect ratio, so object-fit: contain never letterboxes. */
+  .tile { margin: 0; min-width: 0; }
+  .frame { position: relative; aspect-ratio: var(--ar); background: var(--navy); border-radius: 14px; overflow: hidden;
+           box-shadow: 0 16px 36px rgba(14, 30, 64, .2); }
+  .frame video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+  video:fullscreen, video:-webkit-full-screen { object-fit: contain; width: 100%; height: 100%; max-width: none; border-radius: 0; }
+  .w { --ar: 16 / 9; --r: 1.7778; }
+  .t { --ar: 9 / 16; --r: .5625; }
+
+  .tile figcaption { height: var(--c); padding: 10px 2px 0; overflow: hidden; white-space: nowrap; }
+  .tile figcaption b, .tile figcaption span { display: block; overflow: hidden; text-overflow: ellipsis; }
+  .tile figcaption b { font-weight: 600; font-size: 15px; line-height: 21px; }
+  .tile figcaption span { font-size: 13px; line-height: 19px; opacity: .72; }
+
+  /* The whole frame is the play button; the visible icon sits in a corner, clear of faces and on-poster titles. */
+  .play { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; background: none; cursor: pointer; transition: background .15s; }
+  .play::before { content: ""; position: absolute; right: 14px; bottom: 14px; width: 50px; height: 50px; border-radius: 50%;
+                  background: var(--yellow); box-shadow: 0 4px 16px rgba(0, 0, 0, .35); transition: transform .15s; }
+  .play::after { content: ""; position: absolute; right: 30px; bottom: 30px; border-style: solid; border-width: 9px 0 9px 15px;
+                 border-color: transparent transparent transparent var(--blue); }
+  .play:hover { background: rgba(14, 30, 64, .12); }
+  .play:hover::before, .play:focus-visible::before { transform: scale(1.1); }
+  .play:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; border-radius: 14px; }
+  .tile.started .play { display: none; }
+
+  /* Layouts. Widths are solved so every tile in a layout (frame + caption) ends at the same height.
+     100cqw = the layout's width, --g = gap, --c = caption height. */
+  section { width: min(100%, var(--maxw, 100%)); margin: 0 auto; }
+  .layout { container-type: inline-size; display: flex; gap: var(--g); align-items: flex-start; }
+  .row > .tile { flex: var(--r) 1 0; }                                     /* one justified row */
+  .stack { display: flex; flex-direction: column; gap: var(--g); }
+  /* two 16:9 stacked + one 9:16 */
+  section.st { --maxw: calc(1.4514 * var(--hmax) - 0.8889 * var(--c) + var(--g) / 9); }
+  .stack-tall > .stack { width: calc((100cqw - 1.5625 * var(--g) - 0.5625 * var(--c)) / 1.6328125); flex: none; }
+  .stack-tall > .tile { flex: 1 1 0; }
+  /* one large 16:9 + two 16:9 stacked */
+  .hero-stack > .hero { width: calc((100cqw - var(--g) + (var(--c) + var(--g)) / 1.125) / 1.5); flex: none; }
+  .hero-stack > .stack { flex: 1 1 0; min-width: 0; }
+  /* three 9:16 */
+  section.ttt { --maxw: calc(1.6875 * var(--hmax) + 2 * var(--g)); }
+
+  footer { margin-top: clamp(48px, 8vh, 72px); text-align: center; font-size: 13px; color: var(--navy); opacity: .75; }
+
+  @media (max-width: 720px) {
+    :root { --hmax: 78svh; }
+    section { width: 100%; }
+    .layout { flex-direction: column; align-items: center; }
+    .layout > .tile, .layout > .stack { width: 100%; flex: none; }
+    .layout > .tile.t { width: min(100%, calc(var(--hmax) * 9 / 16)); }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>AI video</h1>
+    <nav>
+      <a href="#brand">Brand films</a>
+      <a href="#ads">Ads</a>
+      <a href="#product">Product films</a>
+      <a href="#presenters">Presenters &amp; dialogue</a>
+      <a href="#shorts">Shorts &amp; ASMR</a>
+    </nav>
+  </header>
+
+  <section id="brand" class="st">
+    <h2>Brand films</h2>
+    <div class="layout stack-tall">
+      <div class="stack">
+        <figure class="tile w">
+          <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/every-order-has-a-story/media/poster.jpg"><source src="https://waxwingfactor.github.io/every-order-has-a-story/media/every-order-has-a-story.mp4" type="video/mp4"></video></div>
+          <figcaption><b>Every order has a story</b><span>Daybook Coffee · 30 s</span></figcaption>
+        </figure>
+        <figure class="tile w">
+          <div class="frame"><video playsinline controls preload="none" poster="media/quietleaf-poster.jpg?v=1"><source src="media/quietleaf-three-minutes.mp4?v=1" type="video/mp4"></video></div>
+          <figcaption><b>Three minutes. Yours.</b><span>Quietleaf tea · 18 s</span></figcaption>
+        </figure>
+      </div>
+      <figure class="tile t">
+        <div class="frame"><video playsinline controls preload="none" poster="media/sprigwell-poster.jpg?v=1"><source src="media/sprigwell-still-growing.mp4?v=1" type="video/mp4"></video></div>
+        <figcaption><b>Still growing</b><span>Sprigwell plants · 18 s</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="ads">
+    <h2>Ads</h2>
+    <div class="layout row">
+      <figure class="tile t">
+        <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/brightset-hype-reel/media/brightset-poster.jpg"><source src="https://waxwingfactor.github.io/brightset-hype-reel/media/brightset-hype-reel.mp4" type="video/mp4"></video></div>
+        <figcaption><b>Brightset</b><span>Coaching app · 21 s</span></figcaption>
+      </figure>
+      <figure class="tile w">
+        <div class="frame"><video playsinline controls preload="none" poster="media/dawnward-poster.jpg?v=1"><source src="media/dawnward-first-light.mp4?v=1" type="video/mp4"></video></div>
+        <figcaption><b>Get there first</b><span>Dawnward running shoes · 18 s</span></figcaption>
+      </figure>
+      <figure class="tile t">
+        <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/topx-ad-sample/media/poster.jpg"><source src="https://waxwingfactor.github.io/topx-ad-sample/media/topx-ad.mp4" type="video/mp4"></video></div>
+        <figcaption><b>TopX</b><span>App install ad · 15 s</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="product">
+    <h2>Product films</h2>
+    <div class="layout hero-stack">
+      <figure class="tile w hero">
+        <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/c-four-window-winder-sample/media/poster.jpg"><source src="https://waxwingfactor.github.io/c-four-window-winder-sample/media/c-four-out-of-reach.mp4" type="video/mp4"></video></div>
+        <figcaption><b>Out of reach</b><span>C-Four window winder · 24 s</span></figcaption>
+      </figure>
+      <div class="stack">
+        <figure class="tile w">
+          <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/glowpilot-sample/media/glowpilot-poster.jpg"><source src="https://waxwingfactor.github.io/glowpilot-sample/media/glowpilot-snippet.mp4" type="video/mp4"></video></div>
+          <figcaption><b>GlowPilot</b><span>Presentation software · 29 s</span></figcaption>
+        </figure>
+        <figure class="tile w">
+          <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/glowpilot-sample/media/tidypane-poster.jpg"><source src="https://waxwingfactor.github.io/glowpilot-sample/media/tidypane-snippet.mp4" type="video/mp4"></video></div>
+          <figcaption><b>Tidypane</b><span>Window manager · 29 s</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="presenters">
+    <h2>Presenters &amp; dialogue</h2>
+    <div class="layout hero-stack">
+      <figure class="tile w hero">
+        <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/ask-callie-sample/media/callie-opening-poster.jpg"><source src="https://waxwingfactor.github.io/ask-callie-sample/media/callie-opening-16x9.mp4" type="video/mp4"></video></div>
+        <figcaption><b>Ask Callie</b><span>Boardroom scene, four speakers · 29 s</span></figcaption>
+      </figure>
+      <div class="stack">
+        <figure class="tile w">
+          <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/bankruptcy-presenter-samples/media/know-your-options-poster.jpg"><source src="https://waxwingfactor.github.io/bankruptcy-presenter-samples/media/know-your-options-16x9.mp4" type="video/mp4"></video></div>
+          <figcaption><b>Know your options</b><span>Presenter spot · 29 s</span></figcaption>
+        </figure>
+        <figure class="tile w">
+          <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/bankruptcy-presenter-samples/media/fresh-start-poster.jpg"><source src="https://waxwingfactor.github.io/bankruptcy-presenter-samples/media/fresh-start-16x9.mp4" type="video/mp4"></video></div>
+          <figcaption><b>Fresh start</b><span>Presenter spot · 28 s</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="shorts" class="ttt">
+    <h2>Shorts &amp; ASMR</h2>
+    <div class="layout row">
+      <figure class="tile t">
+        <div class="frame"><video playsinline controls preload="none" poster="https://waxwingfactor.github.io/luxury-shorts-samples/media/braids-poster.jpg"><source src="https://waxwingfactor.github.io/luxury-shorts-samples/media/braids-in-paradise.mp4" type="video/mp4"></video></div>
+        <figcaption><b>3 rules for braids in paradise</b><span>Sable &amp; Sea · 38 s</span></figcaption>
+      </figure>
+      <figure class="tile t">
+        <div class="frame"><video playsinline controls preload="none" poster="media/stone-mill-poster.jpg?v=1"><source src="media/stone-mill-asmr.mp4?v=1" type="video/mp4"></video></div>
+        <figcaption><b>The rotating stone mill</b><span>Matcha ASMR · 15 s</span></figcaption>
+      </figure>
+      <figure class="tile t">
+        <div class="frame"><video playsinline controls preload="none" poster="media/filling-labeling-poster.jpg?v=1"><source src="media/filling-labeling-asmr.mp4?v=1" type="video/mp4"></video></div>
+        <figcaption><b>Filling, sealing &amp; labelling</b><span>Matcha ASMR · 15 s</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer>Spec work. Every brand shown is fictional or unaffiliated.</footer>
+</main>
+
+<script>
+  // Clean posters until a film is started: hide native controls, add one play button per tile.
+  const videos = [...document.querySelectorAll('.tile video')];
+  for (const v of videos) {
+    const tile = v.closest('.tile');
+    v.controls = false;
+    const btn = document.createElement('button');
+    btn.className = 'play';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Play ' + tile.querySelector('figcaption b').textContent);
+    btn.addEventListener('click', () => { v.controls = true; v.play(); });
+    v.parentElement.append(btn);
+    v.addEventListener('play', () => {
+      tile.classList.add('started');
+      v.controls = true;
+      for (const o of videos) if (o !== v && !o.paused) o.pause();   // one film at a time
+    });
+  }
+</script>
+</body>
+</html>

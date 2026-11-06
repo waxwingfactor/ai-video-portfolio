@@ -1,0 +1,6 @@
+# Only the public page and its media are published.
+/*
+!/.gitignore
+!/.nojekyll
+!/index.html
+!/media/
