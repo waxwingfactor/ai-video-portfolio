@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>AI video portfolio</title>
-<meta name="description" content="Fifteen photoreal AI films: brand films, ads, product films, presenters and Shorts.">
+<meta name="description" content="Photoreal AI films: brand films, jewelry, ads, product films and promos, presenters and Shorts.">
 <meta property="og:title" content="AI video portfolio">
-<meta property="og:description" content="Fifteen photoreal AI films: brand films, ads, product films, presenters and Shorts.">
+<meta property="og:description" content="Photoreal AI films: brand films, jewelry, ads, product films and promos, presenters and Shorts.">
 <meta property="og:image" content="https://waxwingfactor.github.io/every-order-has-a-story/media/poster.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -77,6 +77,8 @@
   section.ttt { --maxw: calc(1.6875 * var(--hmax) + 2 * var(--g)); }
   /* four 9:16 */
   section.tttt { --maxw: calc(2.25 * var(--hmax) + 3 * var(--g)); }
+  /* a second row inside a section (Product films: the 10-second promos, one 9:16 + one 16:9, justified) */
+  .layout + .layout { margin-top: var(--g); }
 
 
   @media (max-width: 720px) {
@@ -177,6 +179,16 @@
           <figcaption><b>Tidypane</b><span>Window manager · 29 s</span></figcaption>
         </figure>
       </div>
+    </div>
+    <div class="layout row promos">
+      <figure class="tile t">
+        <div class="frame"><video playsinline controls preload="none" poster="media/pomly-poster.jpg?v=1"><source src="media/pomly-promo-v1.mp4" type="video/mp4"></video></div>
+        <figcaption><b>Pomly</b><span>Sparkling water promo · 10 s</span></figcaption>
+      </figure>
+      <figure class="tile w">
+        <div class="frame"><video playsinline controls preload="none" poster="media/orvelle-poster.jpg?v=1"><source src="media/orvelle-promo-v1.mp4" type="video/mp4"></video></div>
+        <figcaption><b>Orvelle</b><span>Wireless earbuds promo · 10 s</span></figcaption>
+      </figure>
     </div>
   </section>
 
